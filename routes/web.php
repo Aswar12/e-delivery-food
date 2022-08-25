@@ -4,6 +4,7 @@ use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FoodCategoryController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\TransactionController;
 
@@ -27,6 +28,7 @@ Route::prefix('dashboard')->middleware('auth:sanctum', config('jetstream.auth_se
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('food' , FoodController::class);
+    Route::resource('category', FoodCategoryController::class);
 
 
     Route::get('transactions/{id}/status/{status}', [TransactionController::class, 'changeStatus'])->name('transactions.changeStatus');
