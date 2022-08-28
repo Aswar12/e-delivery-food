@@ -6,6 +6,7 @@ use App\Models\Food;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class FoodController extends Controller
 {
@@ -27,8 +28,10 @@ class FoodController extends Controller
 
         if($id){
             $food = Food::with(['category', 'galleries'])->find($id);
+
+        
             if($food){
-                return ResponseFormatter::success($food,'Data produk berhasil diambil');
+                return ResponseFormatter::success($food,'Food found', 200);
             }
             return ResponseFormatter::error(null , 'Data produk tidak ada', 404);
         } 
@@ -60,7 +63,7 @@ class FoodController extends Controller
             $food->where('categories', 'like', '%'.$categories.'%');
         }
 
-        return ResponseFormatter::success($food->paginate($limit),'Data list produk berhasil diambil');
+        return  ResponseFormatter::success($food,'Food found', 200);
 
         
     }

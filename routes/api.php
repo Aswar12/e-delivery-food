@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\FoodCategoryController;
 use App\Http\Controllers\API\FoodController;
 
+
 /*
 |--------          s
 |--------------------------------------------------------------------------
