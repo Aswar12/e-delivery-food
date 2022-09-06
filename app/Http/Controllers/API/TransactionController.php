@@ -23,9 +23,9 @@ class TransactionController extends Controller
         if ($id){
             $transaction = Transaction::with(['items.food',])->find($id);
             if ($transaction){
-                return ResponseFormatter::success($transaction,'Data transaksi berhasil diambil');
+                return $this->sendResponse($transaction,'Data transaksi berhasil diambil');
             }
-            return ResponseFormatter::error(null , 'Data transaksi tidak ada', 404);
+            return $this->sendError(null , 'Data transaksi tidak ada', 404);
         }
 
 
@@ -35,7 +35,7 @@ class TransactionController extends Controller
           {
             $transaction->where('status', $status);
          }
-         return ResponseFormatter::success($transaction->paginate($limit),'Data transaksi berhasil diambil');
+         return $this->sendResponse($transaction->paginate($limit),'Data transaksi berhasil diambil');
     }
 
     public function checkout(Request $request){
@@ -94,14 +94,14 @@ class TransactionController extends Controller
             $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
             $transaction->payment_url = $paymentUrl;
             $transaction->save();
-            return ResponseFormatter::success($transaction,'Transaksi berhasil');
+            return $this->sendResponse($transaction,'Transaksi berhasil');
         }
         catch (Exception $e){
-            return ResponseFormatter::error($e->getMessage(), 'Transaksi gagal');
+            return $this->sendError($e->getMessage(), 'Transaksi gagal');
         }
          
 
 
-        return ResponseFormatter::success($transaction->load('items.food'), 'Transaksi berhasil ');
+        return $this->sendResponse($transaction->load('items.food'), 'Transaksi berhasil ');
     }
 }

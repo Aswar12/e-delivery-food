@@ -10,27 +10,26 @@ use Illuminate\Support\Facades\Hash;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Fortify\Rules\Password;
 use PDO;
 
-class UserController extends Controller
+class  UserController extends Controller
 {
     use PasswordValidationRules;
     public function login(Request $request)
     {
-        try{
+        try{ 
             $request->validate([
-                'email' => 'required|email',
+                'email' => 'email|required',
                 'password' => 'required',
             ]);
-
             // mengecek credential(login)
-
-            $credentials = $request(['email', 'password']);
-            if (!auth()->attempt($credentials)) {
-                return ResponseFormatter:: error([
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return $this->sendError([
                     'message' => 'Unauthorized'
                 ],'Autentication failed', 500);
             }
@@ -40,17 +39,14 @@ class UserController extends Controller
             if(!Hash::check($request->password, $user->password,[])){
                 throw new \Exception('Invalid Credentials');
             }
-
             $tokenResult = $user->createToken('authToken')->plainTextToken;
-            return ResponseFormatter::success([
+            return $this->sendResponse([
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
                 'user' => $user
             ],'Authenticated');
-
-
         } catch (Exception $error){
-            return ResponseFormatter::error([
+            return $this->sendError([
                 'message' => 'Something went wrong',
                 'error' => $error
             ],'Authentication failed', 500);
@@ -63,33 +59,29 @@ class UserController extends Controller
         try{
             $request->validate([
                 'name' => ['required','string', 'max:255'],
+                'username' => ['required','string','unique:users','max:255'],
                 'email' =>[ 'required','email','unique:users','max:255'],
-                
-                'password' => $this->passwordRules(),
+                'password' => ['required','string', new Password],
              
             ]);
 
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'address' => $request->address,
-                'houseNumber' => $request->houseNumber,
-                'phoneNumber' => $request->phoneNumber,
-                'city' => $request->city,
+                'username'=> $request->username,
                 'password' => Hash::make($request->password),
-                
             ]);
             
             $user = User::where('email', $request->email)->first();
 
             $tokenResult = $user->createToken('authToken')->plainTextToken;
-            return ResponseFormatter::success([
+            return $this->sendResponse([
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
                 'user' => $user
             ],'Authenticated');
         } catch (Exception $error){
-            return ResponseFormatter::error([
+            return $this->sendError([
                 'message' => 'Something went wrong',
                 'error' => $error
             ],'Authentication failed', 500);
@@ -98,11 +90,11 @@ class UserController extends Controller
 
     public function logout(Request $request)  {
         $token = $request->user()->currentAccessToken()->delete();
-        return ResponseFormatter::success($token, 'Token Revoked');
+        return $this->sendResponse($token, 'Token Revoked');
     }
  
     public function fetch(Request $request){
-        return ResponseFormatter::success($request->user(), 'Data profile user berhasil diambil');
+        return $this->sendResponse($request->user(), 'Data profile user berhasil diambil');
     }
 
     public function updateProfile(Request $request){
@@ -111,7 +103,7 @@ class UserController extends Controller
         $user = Auth::user();
         $user->update($data);
 
-        return ResponseFormatter::success($user, 'Profile Updated');
+        return $this->sendResponse($user, 'Profile Updated');
 
     }
 
@@ -123,7 +115,7 @@ class UserController extends Controller
         ]);
 
         if($validator->fails()){
-            return ResponseFormatter::error([
+            return $this->sendError([
                 'error' => $validator->errors()],
                 'Update Photo Failed', 401);
         }
@@ -135,7 +127,7 @@ class UserController extends Controller
             $user = Auth::user();
             $user->profile_photo_path = $file;
             $user->update();
-            return ResponseFormatter::success([$file], 'File successfully uploaded');
+            return $this->sendResponse([$file], 'File successfully uploaded');
 
         }
     }

@@ -13,7 +13,7 @@ class FoodRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -31,8 +31,6 @@ class FoodRequest extends FormRequest
             'price' => ['required','integer',],
             'rate' => ['required','numeric', ],
             'types' => 'required',
-
-            
         ];
     }
 }

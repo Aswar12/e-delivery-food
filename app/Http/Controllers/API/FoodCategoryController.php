@@ -19,9 +19,15 @@ class FoodCategoryController extends Controller
         if($id){
             $category = FoodCategory::with(['foods',])->find($id);
             if($category){
-                return ResponseFormatter::success($category,'Data kategori berhasil diambil');
+                return $this->sendResponse([
+                    'status' => 'success',
+                    'data' => $category
+                ], 'Data kategori berhasil diambil'); 
             }
-            return ResponseFormatter::error(null , 'Data kategori tidak ada', 404);
+            return $this->sendError([
+                'status' => 'error',
+                'message' => 'category not found'
+            ], 404);
         } 
 
         $category = FoodCategory::query();
@@ -34,6 +40,9 @@ class FoodCategoryController extends Controller
             $category->with(['foods']);
 
         }
-        return ResponseFormatter::success($category->paginate($limit),'Data kategori berhasil diambil');
+        return $this->sendResponse([
+            'status' => 'Data kategori berhasil diambil',
+            'data' => $category->paginate($limit)
+        ], 200);
     }
 }

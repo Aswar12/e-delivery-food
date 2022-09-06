@@ -2,69 +2,115 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Food;
-use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\Food;
+use Illuminate\Http\Request;
+use App\Http\Resources\FoodResource;
+use Illuminate\Support\Facades\Response;
 
 class FoodController extends Controller
 {
-    public function all(Request $request){
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {   
         $id = $request->input('id');
-        $limit = $request->input('limit',6);
+        $limit = $request->input('limit');
         $name= $request->input('name');
-        $description = $request->input('description');
-        $price = $request->input('price');
-        $tags = $request->input('tags');
-        $categories = $request->input('categories'); 
+        $description= $request->input('description');
+        $ingredients= $request->input('ingredients');
+        $price= $request->input('price');
+        $rate= $request->input('rate');
+        $tags= $request->input('tags');
+        $categories= $request->input('categories');
+        $price_from= $request->input('price_from');
+        $price_to= $request->input('price_to');
 
-        $price_from = $request->input('price_from');
-        $price_to = $request->input('price_to');    
+  
 
-        $rate_from = $request->input('rate_from');
-        $rate_to = $request->input('rate_to');
+         $foods = Food::with(['category','galleries'])->get();
+         $foodResources = FoodResource::collection($foods);
+         return $this->sendResponse($foodResources,'Data makanan berhasil didapatkan', 200);
+    }
 
-        if($id){
-            $food = Food::with(['category', 'galleries'])->find($id);
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
-        
-            if($food){
-                return ResponseFormatter::success($food,'Food found', 200);
-            }
-            return ResponseFormatter::error(null , 'Data produk tidak ada', 404);
-        } 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
 
-
-        $food = Food::with(['category', 'galleries']);
-
-        if($name){
-            $food->where('name', 'like', '%'.$name.'%');
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request , Id $id)
+    {
+        $id = $request->input('id');
+        $food = Food::with(['category','galleries'])->find($id);
+        if(!$food){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'food not found'
+            ], 404);
         }
-        
-        if($description){
-            $food->where('description', 'like', '%'.$description.'%');
-        }
+        $data = FoodResource::collection($food);
+        return $this->sendResponse($data, 200);
 
-        if($price_from){
-            $food->where('price', '>=', $price_from);
-        }
-        if($price_to){
-            $food->where('price', '<=', $price_to);
-        }
-        if($rate_from){
-            $food->where('rate', '>=', $rate_from);
-        }
-        if($rate_to){
-            $food->where('rate', '<=', $rate_to);
-        }
-        if($categories){
-            $food->where('categories', 'like', '%'.$categories.'%');
-        }
+    }
 
-        return  ResponseFormatter::success($food,'Food found', 200);
 
-        
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }
