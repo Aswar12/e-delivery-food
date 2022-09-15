@@ -18,4 +18,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           host: ${{ secrets.SSH_HOST }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: 'RUN_YPUR_DEPLOYMENT_SCRIPT' #cd /var/www/edelivery.my.id && ./deployer.sh
+          script: 'cd /var/www/edelivery.my.id && ./deployer.sh'
