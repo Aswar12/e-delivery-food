@@ -21,5 +21,3 @@ jobs:
           host: "103.171.84.140"
           password: "Sembarang123"
           script: 'cd /var/www/edelivery.my.id && ./deployer.sh'
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
