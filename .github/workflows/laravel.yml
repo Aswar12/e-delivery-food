@@ -15,7 +15,7 @@ jobs:
     - name: Deploy to production
       uses: appleboy/ssh-action@master
       with:
-          username: ${{ secrets.SSH_USERNAME }}
-          host: ${{ secrets.SSH_HOST }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: 'cd /var/www/edelivery.my.id && ./deployer.sh'
+          username: "aswar"
+          host: "103.171.84.140"
+          password: "Sembarang123"
+          script: 'cd /var/www/edelivery.my.id && ./server_deploy.sh'
