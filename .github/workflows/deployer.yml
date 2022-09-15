@@ -22,5 +22,5 @@ jobs:
           username: "aswar"
           host: "103.171.84.140"
           password: "Sembarang123"
-          script: 'cd /var/www/html/MerqataAPI && ./deployer.sh'
+          script: 'cd /var/www/edelivery.my.id && ./deployer.sh'
       
