@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Food;
 use Illuminate\Http\Request;
 use App\Http\Requests\FoodRequest;
+use App\Models\FoodCategory;
 use Illuminate\Support\Facades\Hash;
 
 class FoodController extends Controller
@@ -16,7 +17,7 @@ class FoodController extends Controller
      */
     public function index()
     {
-        $food = Food::paginate(10);
+        $food = Food::with(['category','galleries'])->paginate(10);
         
         return view('food.index',['food'=>$food]);
     }
@@ -28,7 +29,8 @@ class FoodController extends Controller
      */
     public function create()
     {
-        return view('food.create');
+        $foodCategory = FoodCategory::all();
+        return view('food.create',['foodCategory'=>$foodCategory]);
 
     }
 
@@ -39,7 +41,8 @@ class FoodController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+        
         $data = $request->all();
         $data['picturePath'] = $request->file('picturePath')->store('assets/food', 'public');
         Food::create($data);
@@ -65,10 +68,16 @@ class FoodController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Food $Food)
-    {
+    {   
+       
+        $category = FoodCategory::all();
         return view('food.edit',[
-            'item' => $Food
+            'item' => $Food,
+            'categories' => $category
         ]);
+
+
+        
     }
 
     /**
@@ -78,7 +87,7 @@ class FoodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FoodRequest $request, Food $food)
+    public function update(Request $request, Food $food)
     {
         $data = $request->all();
         if($request->file('picturePath')){

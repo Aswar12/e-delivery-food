@@ -16,6 +16,7 @@ class FoodGallery extends Model
     protected $fillable = [
         'food_id',
         'url',
+        'is_featured'
     ];
 
     public function getUrlAttribute($url){

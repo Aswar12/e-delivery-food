@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FoodCategoryController;
 use App\Http\Controllers\FoodController;
+use App\Http\Controllers\FoodGalleryController;
 use App\Http\Controllers\TransactionController;
 
 /*
@@ -29,7 +30,9 @@ Route::prefix('dashboard')->middleware('auth:sanctum', config('jetstream.auth_se
     Route::resource('users', UserController::class);
     Route::resource('food' , FoodController::class);
     Route::resource('category', FoodCategoryController::class);
-
+    Route::resource('food.gallery', FoodGalleryController::class)->shallow()->only([
+        'index', 'create', 'store', 'destroy'
+    ]);   
 
     Route::get('transactions/{id}/status/{status}', [TransactionController::class, 'changeStatus'])->name('transactions.changeStatus');
     Route::resource('transactions' , TransactionController::class);

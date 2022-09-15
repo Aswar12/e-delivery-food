@@ -24,6 +24,7 @@
                             <th class="border px-6 py-4">Price</th>
                             <th class="border px-6 py-4">Rate</th>
                             <th class="border px-6 py-4">Types</th>
+                            <th class="border px-6 py-4">Category</th>
                             <th class="border px-6 py-4">Action</th>
                         </tr>
                     </thead>
@@ -35,7 +36,12 @@
                             <td class="border px-6 py-4">{{number_format($item->price)}}</td>
                             <td class="border px-6 py-4">{{ $item->rate }}</td>
                             <td class="border px-6 py-4">{{ $item->types }}</td>
+                            <td class="border px-6 py-4">{{ $item->category->name }}</td>
                             <td class="border px-6 py-4 text-center">
+                                <a class="inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mx-2 rounded"
+                                    href=" {{  route('food.gallery.index', $item->id)}} ">
+                                    Gallery
+                                </a>
                                 <a href="{{ route('food.edit', $item->id) }}"
                                     class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded">
                                     Edit

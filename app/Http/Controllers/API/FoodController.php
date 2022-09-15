@@ -74,8 +74,8 @@ class FoodController extends Controller
                 'message' => 'food not found'
             ], 404);
         }
-        $data = FoodResource::collection($food);
-        return $this->sendResponse($data, 200);
+        // $data = FoodResource::collection($food);
+        return $this->sendResponse($food, 200);
 
     }
 

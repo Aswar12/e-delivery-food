@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('food_id')->nullable();
             $table->text('url')->nullable();
+            
             $table->softDeletes();
             $table->timestamps();
         });
