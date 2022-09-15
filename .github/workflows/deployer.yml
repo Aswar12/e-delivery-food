@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Directory Permissions
+      run: chmod -R 777 storage bootstrap/cache
     - name: Deploy to production
       uses: appleboy/ssh-action@master
       with:
