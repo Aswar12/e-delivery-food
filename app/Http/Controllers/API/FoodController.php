@@ -30,11 +30,24 @@ class FoodController extends Controller
         $price_from= $request->input('price_from');
         $price_to= $request->input('price_to');
 
-  
-
+        if($id){
+            $food = Food::with(['category', 'galleries'])->find($id);
+            if($food){
+                return $this->sendsuccess(
+                    $food,
+                    'Data makanan berhasil diambil'
+                );
+            }
+            return $this->senderror(
+                null,
+                'Data makanan tidak ada',
+                404
+            );
+        }
          $foods = Food::with(['category','galleries'])->get();
          $foodResources = FoodResource::collection($foods);
-         return $this->sendResponse($foodResources,'Data makanan berhasil didapatkan', 200);
+         return $this->sendsuccess($foodResources,'Data makanan berhasil didapatkan', 200);
+         
     }
 
     /**
@@ -64,7 +77,7 @@ class FoodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request , Id $id)
+    public function show(Request $request , Food $food)
     {
         $id = $request->input('id');
         $food = Food::with(['category','galleries'])->find($id);
@@ -75,7 +88,7 @@ class FoodController extends Controller
             ], 404);
         }
         // $data = FoodResource::collection($food);
-        return $this->sendResponse($food, 200);
+        return $this->sendsuccess($food, 'Data makanan  berhasil didapatkan', 200);
 
     }
 

@@ -94,14 +94,14 @@ class TransactionController extends Controller
             $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
             $transaction->payment_url = $paymentUrl;
             $transaction->save();
-            return $this->sendResponse($transaction,'Transaksi berhasil');
+            return $this->sendsuccess($transaction,'Transaksi berhasil');
         }
         catch (Exception $e){
-            return $this->sendError($e->getMessage(), 'Transaksi gagal');
+            return $this->senderror($e->getMessage(), 'Transaksi gagal');
         }
          
 
 
-        return $this->sendResponse($transaction->load('items.food'), 'Transaksi berhasil ');
+        return $this->sendsuccess($transaction->load('items.food'), 'Transaksi berhasil ');
     }
 }

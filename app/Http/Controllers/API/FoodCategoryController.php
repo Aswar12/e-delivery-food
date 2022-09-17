@@ -19,12 +19,12 @@ class FoodCategoryController extends Controller
         if($id){
             $category = FoodCategory::with(['foods',])->find($id);
             if($category){
-                return $this->sendResponse([
+                return $this->sendsuccess([
                     'status' => 'success',
                     'data' => $category
                 ], 'Data kategori berhasil diambil'); 
             }
-            return $this->sendError([
+            return $this->senderror([
                 'status' => 'error',
                 'message' => 'category not found'
             ], 404);
@@ -40,7 +40,7 @@ class FoodCategoryController extends Controller
             $category->with(['foods']);
 
         }
-        return $this->sendResponse([
+        return $this->sendsuccess([
             'status' => 'Data kategori berhasil diambil',
             'data' => $category->paginate($limit)
         ], 200);

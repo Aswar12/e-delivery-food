@@ -11,27 +11,37 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function sendResponse($result, $message)
+    protected static $response = [
+        'meta' => [
+            'code' => 200,
+            'status' => 'success',
+            'message' => null,
+        ],
+        'data' => null,
+    ];
+
+    /**
+     * Give success response.
+     */
+    public static function sendsuccess($data = null, $message = null)
     {
-        $response = [
-            'success' => true,
-            'data'    => $result,
-            'message' => $message,
-        ];
-        return response()->json($response, 200);
+        self::$response['meta']['message'] = $message;
+        self::$response['data'] = $data;
+
+        return response()->json(self::$response, self::$response['meta']['code']);
     }
 
-    public function sendError($error, $errorMessages = [], $code=404)
+    /**
+     * Give error response.
+     */
+    public static function senderror($data = null, $message = null, $code = 400)
     {
-        $response = [
-            "success" =>false,
-            "message" =>$error,
-        ];
+        self::$response['meta']['status'] = 'error';
+        self::$response['meta']['code'] = $code;
+        self::$response['meta']['message'] = $message;
+        self::$response['data'] = $data;
 
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
-        }
-        return response()->json($response, $code);
-        }
+        return response()->json(self::$response, self::$response['meta']['code']);
+    }
 }
 

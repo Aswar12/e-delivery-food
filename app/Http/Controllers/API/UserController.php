@@ -29,7 +29,7 @@ class  UserController extends Controller
             ]);
             // mengecek credential(login)
             if (!Auth::attempt($request->only('email', 'password'))) {
-                return $this->sendError([
+                return $this->senderror([
                     'message' => 'Unauthorized'
                 ],'Autentication failed', 500);
             }
@@ -40,13 +40,13 @@ class  UserController extends Controller
                 throw new \Exception('Invalid Credentials');
             }
             $tokenResult = $user->createToken('authToken')->plainTextToken;
-            return $this->sendResponse([
+            return $this->sendsuccess([
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
                 'user' => $user
             ],'Authenticated');
         } catch (Exception $error){
-            return $this->sendError([
+            return $this->senderror([
                 'message' => 'Something went wrong',
                 'error' => $error
             ],'Authentication failed', 500);
@@ -75,13 +75,13 @@ class  UserController extends Controller
             $user = User::where('email', $request->email)->first();
 
             $tokenResult = $user->createToken('authToken')->plainTextToken;
-            return $this->sendResponse([
+            return $this->sendsuccess([
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
                 'user' => $user
             ],'Authenticated');
         } catch (Exception $error){
-            return $this->sendError([
+            return $this->senderror([
                 'message' => 'Something went wrong',
                 'error' => $error
             ],'Authentication failed', 500);
@@ -90,11 +90,11 @@ class  UserController extends Controller
 
     public function logout(Request $request)  {
         $token = $request->user()->currentAccessToken()->delete();
-        return $this->sendResponse($token, 'Token Revoked');
+        return $this->sendsuccess($token, 'Token Revoked');
     }
  
     public function fetch(Request $request){
-        return $this->sendResponse($request->user(), 'Data profile user berhasil diambil');
+        return $this->sendsuccess($request->user(), 'Data profile user berhasil diambil');
     }
 
     public function updateProfile(Request $request){
@@ -103,7 +103,7 @@ class  UserController extends Controller
         $user = Auth::user();
         $user->update($data);
 
-        return $this->sendResponse($user, 'Profile Updated');
+        return $this->sendsuccess($user, 'Profile Updated');
 
     }
 
@@ -127,7 +127,7 @@ class  UserController extends Controller
             $user = Auth::user();
             $user->profile_photo_path = $file;
             $user->update();
-            return $this->sendResponse([$file], 'File successfully uploaded');
+            return $this->sendsuccess([$file], 'File successfully uploaded');
 
         }
     }
