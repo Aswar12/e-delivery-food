@@ -30,30 +30,12 @@ class FoodController extends Controller
         $price_from= $request->input('price_from');
         $price_to= $request->input('price_to');
 
-        if($id){
-            $food = Food::with(['category','galleries'])->find($id);
+  
 
-            if($food){
-                return ResponseFormatter::success(
-                    new FoodResource($food),
-                    'Data produk berhasil diambil'
-                );
-            }else{
-                return ResponseFormatter::error(
-                    null,
-                    'Data produk tidak ada',
-                    404
-                );
-            }
-        }
          $foods = Food::with(['category','galleries'])->get();
          $foodResources = FoodResource::collection($foods);
-         return ResponseFormatter::success(
-             $foodResources,
-             'Data list produk berhasil diambil'
-         );
-    
-}
+         return $this->sendResponse($foodResources,'Data makanan berhasil didapatkan', 200);
+    }
 
     /**
      * Show the form for creating a new resource.
