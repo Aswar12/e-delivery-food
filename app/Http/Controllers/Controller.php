@@ -11,6 +11,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    
+}
+
+class ResponseFormatter extends Controller
+{
     protected static $response = [
         'meta' => [
             'code' => 200,
@@ -44,4 +49,3 @@ class Controller extends BaseController
         return response()->json(self::$response, self::$response['meta']['code']);
     }
 }
-
