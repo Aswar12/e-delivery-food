@@ -45,8 +45,8 @@ class FoodController extends Controller
                 404
             );
         }
-         $foods = Food::with(['category','galleries'])->get();
-         $foodResources = FoodResource::collection($foods->paginate($limit));
+         $foods = Food::with(['category','galleries'])->paginate($limit);
+         $foodResources = FoodResource::collection($foods);
          return $this->sendsuccess($foodResources,'Data makanan berhasil didapatkan', 200);
          
     }
