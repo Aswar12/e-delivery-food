@@ -18,6 +18,7 @@ class FoodController extends Controller
      */
     public function index(Request $request)
     {   
+        $limit =6;
         $id = $request->input('id');
         $limit = $request->input('limit');
         $name= $request->input('name');
@@ -34,7 +35,7 @@ class FoodController extends Controller
             $food = Food::with(['category', 'galleries'])->find($id);
             if($food){
                 return $this->sendsuccess(
-                    $food,
+                    $food->paginate($limit),
                     'Data makanan berhasil diambil'
                 );
             }
@@ -45,7 +46,7 @@ class FoodController extends Controller
             );
         }
          $foods = Food::with(['category','galleries'])->get();
-         $foodResources = FoodResource::collection($foods);
+         $foodResources = FoodResource::collection($foods->paginate($limit));
          return $this->sendsuccess($foodResources,'Data makanan berhasil didapatkan', 200);
          
     }
