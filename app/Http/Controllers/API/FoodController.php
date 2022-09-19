@@ -46,8 +46,8 @@ class FoodController extends Controller
             );
         }
          $foods = Food::with(['category','galleries'])->paginate($limit);
-         $foodResources = FoodResource::collection($foods);
-         return $this->sendsuccess($foodResources,'Data makanan berhasil didapatkan', 200);
+         
+         return $this->sendsuccess($foods,'Data makanan berhasil didapatkan', 200);
          
     }
 
