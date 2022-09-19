@@ -48,7 +48,7 @@ class FoodController extends Controller
         }
          $foods = Food::with(['category','galleries'])->paginate($limit);
          
-         return ControllersResponseFormatter($foods,'Data makanan berhasil didapatkan', 200);
+         return ControllersResponseFormatter::sendsuccess($foods,'Data makanan berhasil didapatkan', 200);
          
     }
 
