@@ -12,10 +12,6 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     
-}
-
-class ResponseFormatter extends Controller
-{
     protected static $response = [
         'meta' => [
             'code' => 200,

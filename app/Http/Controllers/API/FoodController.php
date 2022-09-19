@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\ResponseFormatter as ControllersResponseFormatter;
 use App\Models\Food;
 use Illuminate\Http\Request;
 use App\Http\Resources\FoodResource;
@@ -46,9 +45,9 @@ class FoodController extends Controller
                 404
             );
         }
-         $foods = Food::with(['category','galleries'])->paginate($limit);
-         
-         return ControllersResponseFormatter::sendsuccess($foods,'Data makanan berhasil didapatkan', 200);
+         $foods = Food::with(['category','galleries'])->get();
+         $foodResources = FoodResource::collection($foods);
+         return $this->sendsuccess($foodResources,'Data makanan berhasil didapatkan', 200);
          
     }
 
